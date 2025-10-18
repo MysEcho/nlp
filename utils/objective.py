@@ -4,7 +4,7 @@ from time import perf_counter
 
 
 # Steepest Descent Function
-def steepest_descent(X, y, lam=0, tolerance=1e-6, max_iter=5000):
+def steepest_descent(X, y, lam=0, max_tolerance=1e-6, max_iter=5000):
     """
     Performs steepest descent with optimal step size.
     """
@@ -33,7 +33,9 @@ def steepest_descent(X, y, lam=0, tolerance=1e-6, max_iter=5000):
     for k in range(max_iter):
         grad_val = np.array(grad_func(w)).astype(float)
         grad_norm = np.linalg.norm(grad_val)
-        if grad_norm < tolerance:
+        if grad_norm < max_tolerance:
+            model = lambda val: "Simple Model" if val == 0  else "L2-Regularized Model"
+            print(f"Max Tolerance Reached for {model(lam)}")
             break
 
         H_val = np.array(hessian(w)).astype(float)
