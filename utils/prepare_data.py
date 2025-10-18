@@ -18,3 +18,24 @@ def process_data(train_set_directory, test_set_directory):
     y = ca.DM(y_train.reshape(-1, 1).astype(float))
     
     return X, y, y_train, X_test, y_test
+
+# Function to check Convexity
+def check_convexity(X:ca.DM):
+    
+    X_np = np.array(X)
+    
+    num_cols = X_np.shape[1]
+    rank = np.linalg.matrix_rank(X_np)
+    
+    print(f"Matrix X has shape (n, p+1): {X_np.shape}")
+    print(f"Number of columns (p+1): {num_cols}")
+    print(f"Rank of matrix A: {rank}")
+    
+    if rank == num_cols:
+        print("Result: Rank == Number of columns.")
+        print("The matrix A has full column rank.")
+        print("Therefore, f(w) is strictly convex for this dataset.")
+    else:
+        print("Result: Rank < Number of columns.")
+        print("The matrix A does not have full column rank.")
+        print("Therefore, f(w) is convex, but NOT strictly convex for this dataset.")

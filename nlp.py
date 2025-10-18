@@ -1,7 +1,7 @@
 import casadi as ca
 import numpy as np
 import  os
-from utils import steepest_descent, process_data
+from utils import steepest_descent, process_data, check_convexity
 
 # Mean Absolute Error
 def mae(y_true, y_pred):
@@ -13,6 +13,8 @@ test_set_dir  = os.path.join(os.getcwd(), "dataset/Xytest.csv")
 # Load Processed Data
 X, y, y_train, X_test, y_test = process_data(train_set_dir, test_set_dir)
 
+# Check Convexity of Dataset
+check_convexity(X)
 
 # Simple Model (lambda = 0)
 w_star_basic, t_basic, it_basic, fval_basic, gradnorm_basic, rho_basic = steepest_descent(X, y, lam=0)
