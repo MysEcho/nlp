@@ -1,26 +1,17 @@
 import casadi as ca
 import numpy as np
-import pandas as pd
-from utils import steepest_descent
+import  os
+from utils import steepest_descent, process_data
 
 # Mean Absolute Error
 def mae(y_true, y_pred):
     return np.mean(np.abs(y_true - y_pred))
 
+train_set_dir = os.path.join(os.getcwd(),"dataset/Xytrain.csv")
+test_set_dir  = os.path.join(os.getcwd(), "dataset/Xytest.csv")
 
-# Prepare Data
-Xy_train = pd.read_csv("./dataset/Xytrain.csv", header=0).values
-Xy_test  = pd.read_csv("./dataset/Xytest.csv", header=0).values
-
-# X -> other parameters ; y -> quality
-X_train, y_train = Xy_train[:, :-1], Xy_train[:, -1]
-X_test,  y_test  = Xy_test[:, :-1],  Xy_test[:, -1]
-
-n, p = X_train.shape
-e = np.ones((n, 1)) # Bias Term
-
-X = ca.DM(np.hstack((e, X_train.astype(float))))
-y = ca.DM(y_train.reshape(-1, 1).astype(float))
+# Load Processed Data
+X, y, y_train, X_test, y_test = process_data(train_set_dir, test_set_dir)
 
 
 # Simple Model (lambda = 0)
