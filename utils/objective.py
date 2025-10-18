@@ -1,0 +1,54 @@
+import casadi as ca
+import numpy as np
+from time import perf_counter
+
+
+# Steepest Descent Function
+def steepest_descent(X, y, lam=0, tolerance=1e-6, max_iter=5000):
+    """
+    Performs steepest descent with optimal step size.
+    """
+    _ , p = X.shape
+    w = np.zeros((p, 1))  # initial guess
+
+    # Define symbolic variable and expressions
+    w_sym = ca.MX.sym("w", p, 1)
+    res = X @ w_sym - y
+    f_sym = 0.5 * ca.dot(res, res) + lam * ca.dot(w_sym, w_sym)
+    grad_sym = ca.gradient(f_sym, w_sym)
+    hess_sym = ca.hessian(f_sym, w_sym)[0]
+
+    # Create CasADi functions
+    f_func = ca.Function("f", [w_sym], [f_sym])
+    grad_func = ca.Function("grad", [w_sym], [grad_sym])
+    hess_func = ca.Function("hessian", [w_sym], [hess_sym])
+
+    grad_prev_norm = None
+    start_time = perf_counter()
+
+    # Iteration Loop
+    for k in range(max_iter):
+        grad_val = np.array(grad_func(w)).astype(float)
+        grad_norm = np.linalg.norm(grad_val)
+        if grad_norm < tolerance:
+            break
+
+        H_val = np.array(hess_func(w)).astype(float)
+        denom = grad_val.T @ (H_val @ grad_val)
+        if denom <= 0:
+            alpha = 1e-3
+        else:
+            alpha = float((grad_val.T @ grad_val) / denom)
+
+        # Gradient Descent
+        w = w - alpha * grad_val
+
+        if grad_prev_norm is not None:
+            rho = grad_norm / grad_prev_norm
+        else:
+            rho = None
+        grad_prev_norm = grad_norm
+
+    runtime = perf_counter() - start_time
+    fval = float(f_func(w))
+    return w, runtime, k + 1, fval, grad_norm, rho
