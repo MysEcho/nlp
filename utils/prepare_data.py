@@ -34,8 +34,8 @@ def check_convexity(X:ca.DM):
     if rank == num_cols:
         print("Result: Rank == Number of columns.")
         print("The matrix A has full column rank.")
-        print("Therefore, f(w) is strictly convex for this dataset.")
+        print("Therefore, f(w) is strictly convex for this dataset.\n")
     else:
         print("Result: Rank < Number of columns.")
         print("The matrix A does not have full column rank.")
-        print("Therefore, f(w) is convex, but NOT strictly convex for this dataset.")
+        print("Therefore, f(w) is convex, but NOT strictly convex for this dataset.\n")

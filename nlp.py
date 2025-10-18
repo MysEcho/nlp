@@ -33,6 +33,7 @@ mae_test_basic  = mae(y_test, y_pred_test_basic)
 mae_train_l2    = mae(y_train, y_pred_train_l2)
 mae_test_l2     = mae(y_test, y_pred_test_l2)
 
+# Final Statistics
 print("\n==== Simple Model (lambda = 0) ====")
 print(f"Runtime (s): {t_basic:.4f}")
 print(f"Iterations: {it_basic}")

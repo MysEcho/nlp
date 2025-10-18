@@ -1,6 +1,7 @@
 import casadi as ca
 import numpy as np
 from time import perf_counter
+from tqdm import tqdm
 
 
 # Steepest Descent Function
@@ -8,6 +9,9 @@ def steepest_descent(X, y, lam=0, max_tolerance=1e-6, max_iter=5000):
     """
     Performs steepest descent with optimal step size.
     """
+    
+    model = lambda val: "Simple Model" if val == 0  else "L2-Regularized Model"
+    
     _ , p = X.shape
     w = np.zeros((p, 1))  # initial guess
 
@@ -29,13 +33,13 @@ def steepest_descent(X, y, lam=0, max_tolerance=1e-6, max_iter=5000):
     grad_prev_norm = None
     start_time = perf_counter()
 
+    print(f"Optimizing for {model(lam)}....")
     # Iteration Loop
-    for k in range(max_iter):
+    for k in tqdm(range(max_iter)):
         grad_val = np.array(grad_func(w)).astype(float)
         grad_norm = np.linalg.norm(grad_val)
         if grad_norm < max_tolerance:
-            model = lambda val: "Simple Model" if val == 0  else "L2-Regularized Model"
-            print(f"Max Tolerance Reached for {model(lam)}")
+            print(f"Max Tolerance Reached for {model(lam)}\n")
             break
 
         H_val = np.array(hessian(w)).astype(float)
